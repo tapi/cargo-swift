@@ -14,6 +14,7 @@ use indicatif::MultiProgress;
 use crate::bindings::generate_bindings;
 use crate::console::*;
 use crate::console::{run_step, run_step_with_commands};
+use crate::framework::create_frameworks;
 use crate::lib_type::LibType;
 use crate::metadata::{metadata, MetadataExt};
 use crate::swiftpackage::{create_swiftpackage, recreate_output_dir};
@@ -179,6 +180,16 @@ fn run_for_crate(
     generate_bindings_with_output(&targets, &crate_name, mode, lib_type, config)?;
 
     recreate_output_dir(&package_name).expect("Could not create package output directory!");
+
+    create_framework_with_output(
+        &targets,
+        &crate_name,
+        &package_name,
+        mode,
+        lib_type,
+        config
+    )?;
+
     create_xcframework_with_output(
         &targets,
         &crate_name,
@@ -410,6 +421,29 @@ fn build_with_output(
     )?;
 
     Ok(())
+}
+
+fn create_framework_with_output(
+    targets: &[Target],
+    lib_name: &str,
+    package_name: &str,
+    mode: Mode,
+    lib_type: LibType,
+    config: &Config,
+) -> Result<()> {
+    run_step(config, "Creating Framework...", || {
+        // TODO: make this configurable
+        let generated_dir = PathBuf::from("./generated");
+
+        create_frameworks(
+            targets,
+            lib_name,
+            &generated_dir,
+            mode,
+            lib_type,
+        )
+    })
+    .map_err(|e| format!("Failed to create framework due to the following error: \n {e}").into())
 }
 
 fn create_xcframework_with_output(

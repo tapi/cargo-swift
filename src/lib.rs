@@ -30,6 +30,7 @@ mod swiftpackage;
 mod targets;
 mod templating;
 mod xcframework;
+mod framework;
 
 pub use crate::console::error::Result;
 pub use crate::console::Config;

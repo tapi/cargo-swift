@@ -35,3 +35,10 @@ pub(crate) struct PackageSwift<'a> {
     pub(crate) xcframework_name: &'a str,
     pub(crate) disable_warnings: bool,
 }
+
+#[derive(Template)]
+#[template(path = "framework_info.plist", escape = "none")]
+pub(crate) struct FrameworkPlist<'a> {
+    pub(crate) framework_name: &'a str,
+    pub(crate) platforms: Vec<&'a str>,
+}
