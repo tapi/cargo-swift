@@ -148,6 +148,8 @@ fn copy_binary(target: &Target, lib_name: &str, framework_dir: &Path, mode: Mode
 // }
 
 // Info Plist according to ChatGPT. The template borrows from KMP
+// CFMinimumOSVersion is the minimum version of iOS that the framework supports as determined by the version of the Rust compiler
+// https://blog.rust-lang.org/2023/09/25/Increasing-Apple-Version-Requirements.html
 // <?xml version="1.0" encoding="UTF-8"?>
 // <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 // <plist version="1.0">
