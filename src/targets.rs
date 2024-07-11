@@ -11,6 +11,14 @@ pub trait TargetInfo {
     fn target(&self) -> Target;
 }
 
+pub trait PlistInfo {
+    fn plist(&self) -> PlistPlatformInfo;
+}
+
+pub struct PlistPlatformInfo {
+    pub platform_string: &'static str,
+}
+
 #[derive(Debug, Clone)]
 pub enum Target {
     Single {
@@ -167,7 +175,13 @@ impl Target {
         }
     }
 
+    // The target path
     pub fn library_path(&self, lib_name: &str, mode: Mode, lib_type: LibType) -> String {
+        println!(
+            "Library Path: {}/{}",
+            self.library_directory(mode),
+            library_file_name(lib_name, lib_type)
+        );
         format!(
             "{}/{}",
             self.library_directory(mode),
@@ -176,6 +190,7 @@ impl Target {
     }
 }
 
+// The file name of the binary produced by the Rust compiler
 pub fn library_file_name(lib_name: &str, lib_type: LibType) -> String {
     format!("lib{}.{}", lib_name, lib_type.file_extension())
 }
@@ -222,6 +237,48 @@ impl TargetInfo for ApplePlatform {
                 architectures: nonempty!["aarch64-apple-tvos", "x86_64-apple-tvos"],
                 display_name: "tvOS",
                 platform: *self,
+            },
+            WatchOS => {
+                unimplemented!("No official Rust target for platform \"watchOS\"!")
+            }
+            WatchOSSimulator => {
+                unimplemented!("No official Rust target for platform \"watchOS Simulator\"!")
+            }
+            CarPlayOS => unimplemented!("No official Rust target for platform \"CarPlay\"!"),
+            CarPlayOSSimulator => {
+                unimplemented!("No official Rust target for platform \"CarPlay Simulator\"!")
+            }
+        }
+    }
+}
+
+impl PlistInfo for ApplePlatform {
+    fn plist(&self) -> PlistPlatformInfo {
+        use ApplePlatform::*;
+        match self {
+            IOS => {
+                PlistPlatformInfo {
+                    platform_string: "iPhoneOS"
+                }
+            },
+            IOSSimulator => {
+                PlistPlatformInfo {
+                    platform_string: "iPhoneSimulator"
+                }
+            },
+            MacOS => {
+                PlistPlatformInfo {
+                    platform_string: "MacOSX"
+                }
+            },
+            MacCatalyst => {
+                unimplemented!("No official Rust target for platform \"Mac Catalyst\"!")
+
+            },
+            TvOS => {
+                PlistPlatformInfo {
+                    platform_string: "AppleTVOS"
+                }
             },
             WatchOS => {
                 unimplemented!("No official Rust target for platform \"watchOS\"!")

@@ -1,0 +1,11 @@
+{
+  "extension" : {
+    "identifier" : "com.kilb.rust",
+    "name" : "Rust"
+  },
+  "extensionTemplate" : "cargo",
+  "extensionValues" : {
+    "com.kilb.rust.cargo.build.subcommand" : "test",
+    "com.kilb.rust.cargo.run.subcommand" : "test"
+  }
+}
